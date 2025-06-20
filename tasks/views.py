@@ -19,3 +19,8 @@ def new_task(request):
 
 def create_task(request):
     return HttpResponse ("Create URLA")
+
+def show_specific_task(request,id):
+    print("id",id)
+    print("Type",type(id))
+    return HttpResponse(f"This is show specific task {id}")
