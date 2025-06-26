@@ -1,26 +1,75 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+from tasks.forms import TaskForm, TaskModelForm
+from tasks.models import Employee,Task
+
+def manager_dashboard(request):
+    return render(request,"dashboard/manager-dashboard.html")
 
 
-# Create your views here.
+def user_dashboard(request):
+    return render(request,"dashboard/user-dashboard.html")
 
-def home(request):
-    return HttpResponse("WelCome To Task Management System ")
+# def test(request):
+#     context ={
+#         "names":["Forman", "Islam","Hridoy"],
+      
+#     }
+#     return render(request,'test.html',context)
+def test(request):
+    names = ["Mahmud", "Ahamed", "John", "Mr. X"]
+    count = 0
+    for name in names:
+        count += 1
+    context = {
+        "names": names,
+        "age": 23,
+        "count": count
+    }
+    return render(request, 'test.html', context)
 
-def contact(request):
-    return HttpResponse("<h1 style= 'color:Green'> This Is Contact Page <h1>")
-
-def show_task(request):
-    return HttpResponse(" <h1>This Is Our TaskS Page <h1>")
-
-
-def new_task(request):
-    return HttpResponse("This Is New Task And It Create Friday")
 
 def create_task(request):
-    return HttpResponse ("Create URLA")
+    employees = Employee.objects.all()
+    form = TaskModelForm() # FOR GET
 
-def show_specific_task(request,id):
-    print("id",id)
-    print("Type",type(id))
-    return HttpResponse(f"This is show specific task {id}")
+    if request.method== "POST":
+        form = TaskModelForm(request.POST)
+        if form.is_valid():
+            """For Model Form Data """
+            form.save()
+            return render(request,'dashboard/task_from.html',{"form": form,"message": "Task Added Succesfully"})
+
+            """For Django Form data """
+            # data = form.cleaned_data
+            # title = data.get('title')
+            # description = data.get('description')
+
+            # due_date = data.get('due_date')
+            # assigned_to = data.get('assigned_to')
+
+            # task = Task.objects.create(
+            #     title = title, description = description,  due_date = due_date
+            # )
+            # #assigned for employee
+
+            # for emp_id in assigned_to:
+            #     employees = Employee.objects.get(id=emp_id)
+            #     task.assigned_to.add(employees)
+
+         
+    context = {"form": form}
+    return render(request,"dashboard/task_from.html",context)
+
+
+def view_task(request):
+    #retrive all data form task Model
+    tasks = Task.objects.all()
+    # retrive a specific task
+
+    task_3 = Task.objects.get(pk=1)
+
+    #fetch the first task
+
+    first_task = Task.objects.first()
+    return render(request,"show_task.html",{"tasks":tasks, "task3":task_3,"first_task": first_task})

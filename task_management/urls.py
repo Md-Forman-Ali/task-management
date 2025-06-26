@@ -17,15 +17,14 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path, include
-from tasks.views import home, contact, new_task
+from debug_toolbar.toolbar import debug_toolbar_urls
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('home/', home),
-    path('', contact),
+   
     path('tasks/', include("tasks.urls")),
-    path('new_task/', new_task),
-]
+   
+]+debug_toolbar_urls()
 
 
 #CTRL + SHIFT + P
