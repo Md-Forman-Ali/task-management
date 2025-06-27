@@ -1,7 +1,9 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from tasks.forms import TaskForm, TaskModelForm
-from tasks.models import Employee,Task
+from tasks.models import Employee,Task,TaskDetails,Project
+from datetime import date
+from django.db.models import Q,Count,Max,Min,Avg
 
 def manager_dashboard(request):
     return render(request,"dashboard/manager-dashboard.html")
@@ -64,12 +66,45 @@ def create_task(request):
 
 def view_task(request):
     #retrive all data form task Model
-    tasks = Task.objects.all()
+    # tasks = Task.objects.all()
     # retrive a specific task
 
-    task_3 = Task.objects.get(pk=1)
+    # task_3 = Task.objects.get(pk=1)
 
     #fetch the first task
 
-    first_task = Task.objects.first()
-    return render(request,"show_task.html",{"tasks":tasks, "task3":task_3,"first_task": first_task})
+    # first_task = Task.objects.first()
+    # return render(request,"show_task.html",{"tasks":tasks, "task3":task_3,"first_task": first_task})
+
+
+    # show the task are completed 
+    # tasks = Task.objects.filter(status="PENDING")
+
+    # Show the task which due date today
+    # tasks = Task.objects.filter(due_date= date.today())
+    """Showw The Details Which priority Is High and M and Ja iccha """
+    # tasks = TaskDetails.objects.exclude(priority="H")
+
+
+    """Show The Task Who Contain 'paper' """
+    # tasks =Task.objects.filter(title__icontains="c",status="PENDING")
+
+    # tasks = Task.objects.filter(Q(status="PENDING") | Q(status="IN_PROGRESS"))
+
+    # tasks = Task.objects.filter(status="ksgfios").exists()
+    """Selected Related (Foreginkey, OneToOneField)"""
+    # tasks = TaskDetails.objects.select_related('task').all()
+    # tasks = Task.objects.select_related('project').all()
+
+    """Prefetch Related (reverse ForigenKey , ManyToMany)"""
+    # tasks = Project.objects.prefetch_related('task_set').all()
+    # tasks = Task.objects.prefetch_related("assigned_to").all()
+    # tasks = Employee.objects.prefetch_related('tasks').all()
+
+
+    """Aggreate"""
+    # task_count = Task.objects.aggregate(num_task=Count('id'))
+
+    projects = Project.objects.annotate(num_task=Count('task')).order_by('num_task')
+    return render(request, "show_task.html", {"projects": projects})
+    
