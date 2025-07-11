@@ -21,7 +21,23 @@
       <div class="flex items-center gap-2">
         <div class="w-2 h-2 rounded-full bg-green-500"></div>
         <span>{{task.title}}</span>
-        <span>{{task.status}}</span>
+        <a href="{% url 'update_task' task.id %}" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-xl shadow-md transition duration-300 ease-in-out">
+        Edit
+        </a>
+        <form action="{% url 'delete_task' task.id %}" method="POST">
+          {% csrf_token %}
+          <button
+          type="submit"
+          class="bg-red-600 hover:bg-red-700 text-white font-bold text-sm py-2 px-4 rounded shadow transition"
+          >
+          ❌ Delete
+        </button>
+      </form>
+
+
+
+
+       
       </div>
       <div>
         <span class="px-3 py-1 rounded-full bg-blue-50 text-blue-600 text-sm"
