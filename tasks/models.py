@@ -1,5 +1,6 @@
 from django.db import models
 
+
 # Create your models here.
 
 
@@ -42,7 +43,7 @@ class TaskDetails(models.Model):
         (LOW,'Low')
 
     )
-    task = models.OneToOneField(Task,on_delete=models.CASCADE,related_name='details')
+    task = models.OneToOneField(Task,on_delete=models.DO_NOTHING,related_name='details')
   
     priority = models.CharField(max_length=1, choices=PRIORITY_OPOTIONS,default=LOW)
     notes = models.TextField(blank=True, null=True)
@@ -57,3 +58,4 @@ class Project(models.Model):
     start_date = models.DateField()
     def __str__(self):
         return self.name
+    
